@@ -12,15 +12,37 @@ defmodule Day1 do
 
   @spec get_only_nums() :: list()
   def get_only_nums do
-    nums = Enum.map(split_file(), fn line -> line |> String.replace(~r/[^\d]/, "") end)
-    # IO.puts(nums, "NUMS")
+    valid_numbers = %{
+      "one" => "1",
+      "two" => "2",
+      "three" => "3",
+      "four" => "4",
+      "five" => "5",
+      "six" => "6",
+      "seven" => "7",
+      "eight" => "8",
+      "nine" => "9"
+    }
+
+    keys = valid_numbers |> Map.keys()
+
+    nums =
+      Enum.map(split_file(), fn line ->
+        replaced_line =
+          String.replace(line, keys, fn word ->
+            Map.get(valid_numbers, word)
+          end)
+
+        replaced_line = replaced_line |> String.replace(~r/[^\d]/, "")
+        replaced_line
+      end)
+
     nums
   end
 
-  @spec get_first_last(binary()) :: String.t()
+  @spec get_first_last(binary()) :: binary()
   def get_first_last(num) do
     splitStr = String.split(num, "", trim: true)
-
     first = Enum.at(splitStr, 0)
     last = Enum.at(splitStr, -1)
 
@@ -34,14 +56,19 @@ defmodule Day1 do
   @spec get_first_and_last_item() :: list()
   def get_first_and_last_item do
     nums = get_only_nums()
-    test = Enum.map(nums, fn num -> get_first_last(num) end)
-    test
+    arr_of_nums = Enum.map(nums, fn num -> get_first_last(num) end)
+    arr_of_nums
   end
 
-  @spec sum_first_last() :: :ok
-  def sum_first_last() do
+  @spec get_sum() :: :ok
+  def get_sum() do
     nums = get_first_and_last_item()
-    sum = Enum.reduce(nums, 0, fn num, acc -> String.to_integer(num) + acc end)
+
+    sum =
+      Enum.reduce(nums, 0, fn num, acc ->
+        String.to_integer(num) + acc
+      end)
+
     IO.puts(sum)
   end
 end
