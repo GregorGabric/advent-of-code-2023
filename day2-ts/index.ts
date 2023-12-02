@@ -17,7 +17,7 @@ const passesColor = (
   arrOfNums: ReturnType<typeof matchColor>,
   maxValue: number
 ) => arrOfNums?.every((num) => num <= maxValue);
-let count = 0;
+let sum_1 = 0;
 
 file.split("\n").forEach((line) => {
   const bluePass = passesColor(matchColor(line, "blue"), MAX_CUBES.blue);
@@ -26,8 +26,26 @@ file.split("\n").forEach((line) => {
 
   if (bluePass && greenPass && redPass) {
     const gameId = line.split(":")[0].split(" ")[1];
-    count += Number(gameId);
+    sum_1 += Number(gameId);
   }
 });
 
-console.log(count);
+// PART 2
+
+const getMinimumCubes = (arrOfNums: ReturnType<typeof matchColor>) =>
+  Math.max(...arrOfNums!);
+
+let sum_2 = 0;
+
+file.split("\n").forEach((line) => {
+  const blueMinimum = getMinimumCubes(matchColor(line, "blue"));
+  const greenMinimum = getMinimumCubes(matchColor(line, "green"));
+  const redMinimum = getMinimumCubes(matchColor(line, "red"));
+
+  sum_2 += blueMinimum * greenMinimum * redMinimum;
+  console.log({
+    blueMinimum,
+    greenMinimum,
+    redMinimum,
+  });
+});
